@@ -32,6 +32,7 @@ include_once(INCLUDE_DIR.'class.canned.php');
 require_once(INCLUDE_DIR.'class.dynamic_forms.php');
 require_once(INCLUDE_DIR.'class.user.php');
 require_once(INCLUDE_DIR.'class.collaborator.php');
+require_once(INCLUDE_DIR.'class.timetracking.php');
 
 
 class Ticket {
@@ -1727,6 +1728,11 @@ class Ticket {
         global $thisstaff, $cfg;
 
 
+	//Add Email to the array - will be used to store time tracking information
+
+        $vars['email'] = $this->getEmail();
+
+
         if(!$vars['poster'] && $thisstaff)
             $vars['poster'] = $thisstaff;
 
@@ -1841,6 +1847,12 @@ class Ticket {
 
     function postNote($vars, &$errors, $poster, $alert=true) {
         global $cfg, $thisstaff;
+
+	//Add Email to the array - will be used to store time tracking information
+
+        $vars['email'] = $this->getEmail();
+
+
 
         //Who is posting the note - staff or system?
         $vars['staffId'] = 0;

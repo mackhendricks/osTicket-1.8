@@ -209,6 +209,10 @@ if($ticket->isOverdue())
                     ?>
                     </td>
                 </tr>
+		<tr>
+                    <th width="100">Available Time:</th>
+                    <td><font color='#184E81'><?php echo sprintf('%.2f',Timetracking::getAvailableTime($ticket->getEmail())); ?> hour(s)</font></td>
+                </tr>
                 <tr>
                     <th>Email:</th>
                     <td>
@@ -365,7 +369,8 @@ $tcount+= $ticket->getNumNotes();
                 <th colspan="4" width="100%">
                 <div>
                     <span style="display:inline-block"><?php
-                        echo Format::db_datetime($entry['created']);?></span>
+                        echo Format::db_datetime($entry['created']);?>
+                       <br>Time Used: <?php echo sprintf('%.2f hour(s)',timetracking::getThreadTimeUsed($ticket->getId(),$entry['id']));?></span>
                     <span style="display:inline-block;padding-left:1em" class="faded title"><?php
                         echo Format::truncate($entry['title'], 100); ?></span>
                     <span style="float:right;white-space:no-wrap;display:inline-block">
@@ -377,6 +382,7 @@ $tcount+= $ticket->getNumNotes();
                 </div>
                 </th>
             </tr>
+
             <tr><td colspan="4" class="thread-body" id="thread-id-<?php
                 echo $entry['id']; ?>"><div><?php
                 echo $entry['body']->toHtml(); ?></div></td></tr>
@@ -415,6 +421,19 @@ $tcount+= $ticket->getNumNotes();
 <?php }elseif($warn) { ?>
     <div id="msg_warning"><?php echo $warn; ?></div>
 <?php } ?>
+<?php if (Timetracking::getAvailableTime($ticket->getEmail()) > 0) { ?>
+        <div id="msg_notice">
+        Available Time: <font color='#184E81'><?php echo sprintf('%.2f',Timetracking::getAvailableTime($ticket->getEmail())); ?> hour(s)</font>
+        </div>
+<?php
+} else {
+?>
+        <div id="msg_error">
+        Available Time: <font color='#184E81'><?php echo sprintf('%.2f',Timetracking::getAvailableTime($ticket->getEmail())); ?> hour(s)</font>
+        </div>
+<?php
+}
+?>
 
 <div id="response_options">
     <ul class="tabs">
@@ -520,6 +539,7 @@ $tcount+= $ticket->getNumNotes();
                         }
                         ?>
                     </select>
+
                     <br>
                     <?php
                     $signature = '';
@@ -545,6 +565,17 @@ $tcount+= $ticket->getNumNotes();
                         echo $info['response']; ?></textarea>
                 </td>
             </tr>
+	    <?php
+            if($errors['timeused']) {?>
+            <tr><td width="160">&nbsp;</td><td class="error"><?php echo $errors['timeused']; ?>&nbsp;</td></tr>
+            <?php
+            }?>
+
+            </tr>
+                <td><label><strong>Time Used (minutes):</strong></label></td>
+                <td><input type='textfield' name='timeused' id='timeused'/></td>
+            </tr>
+
             <?php
             if($cfg->allowAttachments()) { ?>
             <tr>
@@ -655,6 +686,17 @@ $tcount+= $ticket->getNumNotes();
                         <br>
                 </td>
             </tr>
+            <?php
+            if($errors['timeused']) {?>
+            <tr><td width="160">&nbsp;</td><td class="error"><?php echo $errors['timeused']; ?>&nbsp;</td></tr>
+            <?php
+            }?>
+
+            </tr>
+                <td><label><strong>Time Used (minutes):</strong></label></td>
+                <td><input type='textfield' name='timeused' id='timeused'/></td>
+            </tr>
+
             <?php
             if($cfg->allowAttachments()) { ?>
             <tr>

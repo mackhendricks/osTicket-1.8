@@ -55,7 +55,21 @@ if($_POST && !$errors):
 
                 if(!$_POST['response'])
                     $errors['response']='Response required';
-                //Use locks to avoid double replies
+                
+		
+		//Timetracking
+
+		if(!$_POST['timeused']) {
+                    $errors['timeused']='Time Used is required';
+                }
+                else {
+                    if(!is_numeric($_POST['timeused']) || ($_POST['timeused'] < 0) ) {
+                        $errors['timeused']='Time Used most be a numeric value that is more then 0';
+
+                    }
+		}
+
+		//Use locks to avoid double replies
                 if($lock && $lock->getStaffId()!=$thisstaff->getId())
                     $errors['err']='Action Denied. Ticket is locked by someone else!';
 
@@ -163,7 +177,19 @@ if($_POST && !$errors):
              }
             break;
         case 'postnote': /* Post Internal Note */
-            //Make sure the staff can set desired state
+
+	//Make sure the staff tracks time used even if doing internet research
+        	if(!$_POST['timeused']) {
+                    $errors['timeused']='Time Used is required';
+                }
+                else {
+                    if(!is_numeric($_POST['timeused']) || ($_POST['timeused'] < 0) ) {
+                        $errors['timeused']='Time Used most be a numeric value that is more then 0';
+
+                    }
+		}
+
+	//Make sure the staff can set desired state
             if($_POST['state']) {
                 if($_POST['state']=='closed' && !$thisstaff->canCloseTickets())
                     $errors['state'] = "You don't have permission to close tickets";
@@ -585,7 +611,7 @@ if($thisstaff->canCreateTickets()) {
 }
 
 
-$ost->addExtraHeader('<script type="text/javascript" src="js/ticket.js"></script>');
+$ost->addExtraHeader('<script type="text/javascript" src="js/ticket.js?bf07dfa"></script>');
 $ost->addExtraHeader('<meta name="tip-namespace" content="tickets.queue" />',
     "$('#content').data('tipNamespace', 'tickets.queue');");
 

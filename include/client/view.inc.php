@@ -60,6 +60,11 @@ if ($thisclient && $thisclient->isGuest()
                    <th width="100">Name:</th>
                    <td><?php echo ucfirst(Format::htmlchars($ticket->getName())); ?></td>
                </tr>
+	       <tr>
+                    <th width="100">Available Time:</th>
+                    <td><font color='#184E81'><?php echo sprintf('%.2f',Timetracking::getAvailableTime($ticket->getEmail())); ?> hour(s)</font></td>
+                </tr>
+
                <tr>
                    <th width="100">Email:</th>
                    <td><?php echo Format::htmlchars($ticket->getEmail()); ?></td>
@@ -113,6 +118,7 @@ if($ticket->getThreadCount() && ($thread=$ticket->getClientThread())) {
         <table class="thread-entry <?php echo $threadType[$entry['thread_type']]; ?>" cellspacing="0" cellpadding="1" width="800" border="0">
             <tr><th><div>
 <?php echo Format::db_datetime($entry['created']); ?>
+<br>Time Used: <?php echo sprintf('%.2f hour(s)',timetracking::getThreadTimeUsed($ticket->getId(),$entry['id']));?>
                 &nbsp;&nbsp;<span class="textra"></span>
                 <span><?php echo $poster; ?></span>
             </div>

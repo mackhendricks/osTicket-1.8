@@ -1061,6 +1061,14 @@ Class ThreadEntry {
         if(!db_query($sql) || !($entry=self::lookup(db_insert_id(), $vars['ticketId'])))
             return false;
 
+
+ 	/**** Time Tracking ****/
+
+        //Save the minutes used on the response
+
+        Timetracking::setTimeUsed($vars['ticketId'],db_insert_id(),$vars['email'],$vars['timeused']);
+
+
         /************* ATTACHMENTS *****************/
 
         //Upload/save attachments IF ANY
